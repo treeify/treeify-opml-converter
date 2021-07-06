@@ -33,10 +33,7 @@ function convertOutlineElement(outlineElement: Element) {
   const documentFragment = parseHtml(textAttribute)
   const anchorElements = documentFragment.querySelectorAll("a")
   if (anchorElements.length === 1) {
-    // a要素が1つだけある場合はウェブページ項目として扱う
-
     const anchorElement = anchorElements.item(0)
-
     if (documentFragment.childNodes.length === 1) {
       // パターン1「<a>...</a>」
       outlineElement.setAttribute("type", "link")
@@ -70,7 +67,7 @@ function convertOutlineElement(outlineElement: Element) {
         newElement.setAttribute("html", dummy.innerHTML.trim())
         outlineElement.append(newElement)
       } else {
-        // パターン4「テキスト <a>...</a> テキスト」
+        // パターン4「テキスト <a>...</a> テキスト」や「<b><a>...</a></b>」など
         // 下手に変換しても逆によく分からなくなる恐れがあるのでそのまま出力する
       }
     }
