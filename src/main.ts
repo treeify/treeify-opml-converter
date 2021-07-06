@@ -20,7 +20,17 @@ inputArea.addEventListener('input', () => {
       const textAttribute = outlineElement.getAttribute('text')
       assertNonNull(textAttribute)
 
-      outlineElement.setAttribute('html', textAttribute)
+      const anchorElements = parseHtml(textAttribute).querySelectorAll("a")
+      if (anchorElements.length === 1) {
+        // a要素が1つだけある場合はウェブページ項目として扱う
+
+        const anchorElement = anchorElements.item(0)
+        outlineElement.setAttribute("type", "link")
+        outlineElement.setAttribute("text", anchorElement.text)
+        outlineElement.setAttribute("url", anchorElement.href)
+      } else {
+        outlineElement.setAttribute('html', textAttribute)
+      }
     }
 
     outputArea.value = xmlDocumentToString(document)
@@ -35,4 +45,10 @@ function xmlDocumentToString(document: Document): string {
   } else {
     return '<?xml version="1.0"?>\n' + xmlString
   }
+}
+
+function parseHtml(html: string): DocumentFragment {
+  const templateElement = document.createElement('template')
+  templateElement.innerHTML = html
+  return templateElement.content
 }
