@@ -1,0 +1,19 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+#input-output-area {
+  height: 70vh;
+
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+#input-area,
+#output-area {
+  white-space: nowrap;
+  overflow-x: scroll;
+
+  resize: none;
+}
