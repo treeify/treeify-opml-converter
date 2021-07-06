@@ -1,0 +1,14 @@
+{
+  "name": "treeify-opml-converter",
+  "version": "0.0.0",
+  "devDependencies": {
+    "prettier": "^2.3.2",
+    "typescript": "^4.3.2",
+    "vite": "^2.3.8"
+  },
+  "scripts": {
+    "build": "tsc && vite build",
+    "dev": "vite",
+    "serve": "vite preview"
+  }
+}
