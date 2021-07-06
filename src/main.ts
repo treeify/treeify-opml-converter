@@ -61,9 +61,11 @@ inputArea.addEventListener('input', () => {
             outlineElement.append(newElement)
           } else {
             // パターン4「テキスト <a>...</a> テキスト」
-
+            // 下手に変換しても逆によく分からなくなる恐れがあるのでそのまま出力する
           }
         }
+      } else if (anchorElements.length >= 2) {
+        // a要素が2つ以上ある場合は諦めてそのまま出力する
       } else {
         outlineElement.setAttribute('html', textAttribute)
       }
