@@ -60,11 +60,10 @@ function convertOutlineElement(outlineElement: Element) {
         outlineElement.setAttribute("url", anchorElement.href)
 
         documentFragment.removeChild(anchorElement)
-        const dummy = document.createElement("dummy")
-        dummy.append(documentFragment)
+        const restHtml = toHtml(documentFragment).trim()
         const newElement = document.createElement("outline")
-        newElement.setAttribute("text", dummy.innerHTML.trim())
-        newElement.setAttribute("html", dummy.innerHTML.trim())
+        newElement.setAttribute("text", restHtml)
+        newElement.setAttribute("html", restHtml)
         outlineElement.append(newElement)
       } else {
         // パターン4「テキスト <a>...</a> テキスト」や「<b><a>...</a></b>」など
@@ -92,4 +91,10 @@ function parseHtml(html: string): DocumentFragment {
   const templateElement = document.createElement('template')
   templateElement.innerHTML = html
   return templateElement.content
+}
+
+function toHtml(documentFragment: DocumentFragment): string {
+  const dummy = document.createElement("dummy")
+  dummy.append(documentFragment)
+  return dummy.innerHTML
 }
