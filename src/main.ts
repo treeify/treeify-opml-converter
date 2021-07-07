@@ -56,7 +56,7 @@ function convertOutlineElement(document: Document, outlineElement: Element) {
         newElement.setAttribute('type', 'link')
         newElement.setAttribute('text', anchorElement.text)
         newElement.setAttribute('url', anchorElement.href)
-        outlineElement.append(newElement)
+        outlineElement.prepend(newElement)
       } else if (index === 0) {
         // パターン3「<a>...</a> テキスト」
         outlineElement.setAttribute('type', 'link')
@@ -68,7 +68,7 @@ function convertOutlineElement(document: Document, outlineElement: Element) {
         const newElement = document.createElement('outline')
         newElement.setAttribute('text', restHtml)
         newElement.setAttribute('html', restHtml)
-        outlineElement.append(newElement)
+        outlineElement.prepend(newElement)
       } else {
         // パターン4「テキスト <a>...</a> テキスト」や「<b><a>...</a></b>」など
         // 下手に変換しても逆によく分からなくなる恐れがあるのでそのまま出力する
