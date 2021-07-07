@@ -16,8 +16,8 @@ inputArea.addEventListener('input', () => {
       outputArea.value = ''
     }
   } else {
-    for (const outlineElement of document.getElementsByTagName('outline')) {
-      convertOutlineElement(outlineElement)
+    for (const outlineElement of [...document.getElementsByTagName('outline')]) {
+      convertOutlineElement(document, outlineElement)
     }
 
     outputArea.value = xmlDocumentToString(document)
@@ -26,7 +26,7 @@ inputArea.addEventListener('input', () => {
 
 // WorkFlowyのoutline要素をTreeify向けのoutline要素に変換する。
 // ミューテーションするので戻り値はなし。
-function convertOutlineElement(outlineElement: Element) {
+function convertOutlineElement(document: Document, outlineElement: Element) {
   const textAttribute = outlineElement.getAttribute('text')
   assertNonNull(textAttribute)
 
