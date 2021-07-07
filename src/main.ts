@@ -48,9 +48,9 @@ function convertOutlineElement(document: Document, outlineElement: Element) {
       if (index === documentFragment.childNodes.length - 1) {
         // パターン2「テキスト <a>...</a>」
         documentFragment.removeChild(anchorElement)
-        const dummy = document.createElement('dummy')
-        dummy.append(documentFragment)
-        outlineElement.setAttribute('text', dummy.innerHTML.trim())
+        const restHtml = toHtml(documentFragment).trim()
+        outlineElement.setAttribute('text', restHtml)
+        outlineElement.setAttribute('html', restHtml)
 
         const newElement = document.createElement('outline')
         newElement.setAttribute('type', 'link')
