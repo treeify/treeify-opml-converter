@@ -3,6 +3,8 @@ import {assertNonNull} from './assert'
 
 document.title = 'WorkFlowyやDynalistのOPMLをTreeify用に変換'
 
+const form = document.querySelector<HTMLFormElement>('#form')
+assertNonNull(form)
 const inputArea = document.querySelector<HTMLTextAreaElement>('#input-area')
 assertNonNull(inputArea)
 const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
@@ -19,7 +21,13 @@ inputArea.addEventListener('input', () => {
     }
   } else {
     for (const outlineElement of [...document.getElementsByTagName('outline')]) {
-      convertOutlineElement(document, outlineElement)
+      switch (form.outlinerName.value) {
+        case 'WorkFlowy':
+          convertWorkFlowyOutlineElement(document, outlineElement)
+          break
+        case 'Dynalist':
+          break
+      }
     }
 
     outputArea.value = xmlDocumentToString(document)
@@ -32,7 +40,7 @@ inputArea.addEventListener('input', () => {
 
 // WorkFlowyのoutline要素をTreeify向けのoutline要素に変換する。
 // ミューテーションするので戻り値はなし。
-function convertOutlineElement(document: Document, outlineElement: Element) {
+function convertWorkFlowyOutlineElement(document: Document, outlineElement: Element) {
   const textAttribute = outlineElement.getAttribute('text')
   assertNonNull(textAttribute)
 
