@@ -1,6 +1,8 @@
 import './style.css'
 import {assertNonNull} from './assert'
 
+document.title = 'WorkFlowyやDynalistのOPMLをTreeify用に変換'
+
 const inputArea = document.querySelector<HTMLTextAreaElement>('#input-area')
 assertNonNull(inputArea)
 const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
