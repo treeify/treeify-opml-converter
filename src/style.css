@@ -63,6 +63,10 @@ main {
   box-shadow: 1px 1px 5px hsl(-18, 30%, 85%);
 }
 
+#output-area {
+  background: hsl(0, 0%, 98%);
+}
+
 footer {
   margin-left: auto;
   width: max-content;
