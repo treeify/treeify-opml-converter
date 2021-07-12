@@ -8,12 +8,22 @@
   <body>
     <main>
       <h1>OPMLをTreeify用に変換</h1>
-      <div id="input-output-area">
-        <label for="input-area">変換前</label>
-        <label for="output-area">変換後</label>
-        <textarea id="input-area" autofocus></textarea>
-        <textarea id="output-area"></textarea>
-      </div>
+      <form id="form">
+        <label>
+          <input type="radio" name="outlinerName" value="WorkFlowy" checked />
+          WorkFlowy
+        </label>
+        <label>
+          <input type="radio" name="outlinerName" value="Dynalist" />
+          Dynalist
+        </label>
+        <div id="input-output-area">
+          <label for="input-area">変換前</label>
+          <label for="output-area">変換後</label>
+          <textarea id="input-area" autofocus></textarea>
+          <textarea id="output-area"></textarea>
+        </div>
+      </form>
       <footer>
         <p>
           このツールは<a href="https://github.com/treeify/treeify-browser-extension">Treeify</a
