@@ -11,6 +11,34 @@ assertNonNull(inputArea)
 const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
 assertNonNull(outputArea)
 
+// Dynalistに合わせてMarkdownパーサーの挙動をカスタマイズする。
+// __text__ を<strong>text</strong>の代わりに<em>text</em>と解釈させる。
+const tokenizer = {
+  emStrong(src: string, maskedSrc: string, prevChar: string) {
+    const result = /^__(.+)__/.exec(src)
+    if (result === null) return false
+
+    return {
+      type: 'em',
+      raw: result[0],
+      text: result[1],
+    }
+  },
+}
+// Treeify（というよりChromeのcontenteditable）に合わせてMarkdown→HTML変換の挙動をカスタマイズする。
+const renderer = {
+  strong(text: string) {
+    return `<b>${text}</b>`
+  },
+  em(text: string) {
+    return `<i>${text}</i>`
+  },
+  del(text: string) {
+    return `<strike>${text}</strike>`
+  },
+}
+marked.use({tokenizer, renderer} as any)
+
 inputArea.addEventListener('input', () => {
   const document = new DOMParser().parseFromString(inputArea.value, 'text/xml')
   if (document.getElementsByTagName('parsererror').length > 0) {
