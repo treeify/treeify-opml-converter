@@ -50,19 +50,17 @@ main {
 #output-area {
   white-space: nowrap;
 
-  outline: transparent;
-  border: hsl(198, 0%, 75%) 1px solid;
-  box-shadow: 1px 1px 3px hsl(0, 0%, 85%);
+  /* lch(75.0%, 20.0, 280.4)相当 */
+  outline-color: #acb8dd;
+  /* lch(75.0%, 0.0, 0.0)相当 */
+  border: #b9b9b9 1px solid;
+  
+  /* lch(85.0%, 0.0, 0.0)相当 */
+  box-shadow: 0 0 4px #d4d4d4 inset;
 
   resize: none;
 
   padding: 0.5em;
-}
-
-#input-area:focus,
-#output-area:focus {
-  border-color: hsl(-18, 30%, 50%);
-  box-shadow: 1px 1px 5px hsl(-18, 30%, 85%);
 }
 
 #output-area {
