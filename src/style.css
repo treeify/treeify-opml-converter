@@ -45,10 +45,8 @@ main {
 #input-area,
 #output-area {
   white-space: nowrap;
-  overflow-x: scroll;
 
   outline: transparent;
-  border-radius: 1em;
   border: hsl(198, 0%, 75%) 1px solid;
   box-shadow: 1px 1px 3px hsl(0, 0%, 85%);
 
