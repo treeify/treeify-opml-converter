@@ -4,7 +4,8 @@
 }
 
 body {
-  background: hsl(94, 12%, 93%);
+  /* lch(97.0%, 0.0, 0.0)相当 */
+  background: #f6f6f6;
 }
 
 h1 {
@@ -20,9 +21,12 @@ main {
   margin: 20px auto;
   width: calc(100% - 200px);
 
-  border-radius: 5px;
+  border-radius: 10px;
   padding: 40px 40px 20px;
-  background: hsl(94, 12%, 98%);
+  background: #ffffff;
+
+  /* lch(80.0%, 0.0, 0.0)相当 */
+  box-shadow: 0 1.5px 5px #c6c6c6;
 }
 
 #input-output-area {
