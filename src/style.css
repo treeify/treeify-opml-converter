@@ -12,7 +12,9 @@ h1 {
   margin-inline: auto;
   width: max-content;
 
-  border-bottom: hsl(24, 26%, 70%) 1px solid;
+  padding-inline: 1.5em;
+  /* lch(75.0%, 30.0, 160.4)相当 */
+  border-bottom: #84c7a5 3px solid;
 
   margin-bottom: 1em;
 }
