@@ -95,24 +95,10 @@ function convertWorkFlowyOutlineElement(document: Document, outlineElement: Elem
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
   if (noteAttribute !== null) {
-    const lines = noteAttribute.split(/\r?\n/)
-    for (const line of lines.reverse()) {
-      const documentFragment = parseHtml(line)
-      const anchorElements = documentFragment.querySelectorAll('a')
-      const newElement = document.createElement('outline')
-      if (anchorElements.length === 1) {
-        const anchorElement = anchorElements.item(0)
-        newElement.setAttribute('type', 'link')
-        newElement.setAttribute('text', anchorElement.text)
-        newElement.setAttribute('url', anchorElement.href)
-      } else if (anchorElements.length >= 2) {
-        newElement.setAttribute('text', line)
-      } else {
-        newElement.setAttribute('text', line)
-        newElement.setAttribute('html', line)
-      }
-      outlineElement.prepend(newElement)
-    }
+    const newElement = document.createElement('outline')
+    newElement.setAttribute('text', noteAttribute)
+    outlineElement.prepend(newElement)
+
     // Treeifyにとっては不要な属性なので削除（削除しなくても動作は変わらない）
     outlineElement.removeAttribute('_note')
   }
@@ -174,25 +160,10 @@ function convertDynalistOutlineElement(document: Document, outlineElement: Eleme
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
   if (noteAttribute !== null) {
-    const lines = noteAttribute.split(/\r?\n/)
-    for (const line of lines.reverse()) {
-      const html = marked.parseInline(line)
-      const documentFragment = parseHtml(html)
-      const anchorElements = documentFragment.querySelectorAll('a')
-      const newElement = document.createElement('outline')
-      if (anchorElements.length === 1) {
-        const anchorElement = anchorElements.item(0)
-        newElement.setAttribute('type', 'link')
-        newElement.setAttribute('text', anchorElement.text)
-        newElement.setAttribute('url', anchorElement.href)
-      } else if (anchorElements.length >= 2) {
-        newElement.setAttribute('text', line)
-      } else {
-        newElement.setAttribute('text', line)
-        newElement.setAttribute('html', html)
-      }
-      outlineElement.prepend(newElement)
-    }
+    const newElement = document.createElement('outline')
+    newElement.setAttribute('text', noteAttribute)
+    outlineElement.prepend(newElement)
+
     // Treeifyにとっては不要な属性なので削除（削除しなくても動作は変わらない）
     outlineElement.removeAttribute('_note')
   }
