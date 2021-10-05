@@ -87,6 +87,16 @@ function convertWorkFlowyOutlineElement(document: Document, outlineElement: Elem
     }
   }
 
+  // img要素をプレーンテキスト化する
+  const imageElements = documentFragment.querySelectorAll('img')
+  for (const imageElement of imageElements) {
+    if (imageElement.alt === '') {
+      imageElement.replaceWith(imageElement.src)
+    } else {
+      imageElement.replaceWith(`${imageElement.alt} ${imageElement.src}`)
+    }
+  }
+
   outlineElement.setAttribute('html', toHtml(documentFragment))
 
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
@@ -118,6 +128,16 @@ function convertDynalistOutlineElement(document: Document, outlineElement: Eleme
       anchorElement.replaceWith(...anchorElement.childNodes, ` ${anchorElement.href} `)
     } else {
       anchorElement.replaceWith(...anchorElement.childNodes)
+    }
+  }
+
+  // img要素をプレーンテキスト化する
+  const imageElements = documentFragment.querySelectorAll('img')
+  for (const imageElement of imageElements) {
+    if (imageElement.alt === '') {
+      imageElement.replaceWith(imageElement.src)
+    } else {
+      imageElement.replaceWith(`${imageElement.alt} ${imageElement.src}`)
     }
   }
 
