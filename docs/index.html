@@ -4,25 +4,36 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title></title>
-  <script type="module" crossorigin src="./assets/index.f328558e.js"></script>
-  <link rel="stylesheet" href="./assets/index.b152f639.css">
+  <script type="module" crossorigin src="./assets/index.0c580db6.js"></script>
+  <link rel="modulepreload" href="./assets/vendor.14b3b047.js">
+  <link rel="stylesheet" href="./assets/index.936b58cd.css">
 </head>
   <body>
     <main>
       <h1>OPMLをTreeify用に変換</h1>
-      <div id="input-output-area">
-        <label for="input-area">変換前</label>
-        <label for="output-area">変換後</label>
-        <textarea id="input-area" autofocus></textarea>
-        <textarea id="output-area"></textarea>
-      </div>
+      <form id="form">
+        <div class="radio-button-area">
+          <label>
+            <input type="radio" name="outlinerName" value="Dynalist" checked />
+            Dynalist → Treeify
+          </label>
+          <label>
+            <input type="radio" name="outlinerName" value="WorkFlowy" />
+            WorkFlowy → Treeify
+          </label>
+        </div>
+        <div id="input-output-area">
+          <label for="input-area">入力欄（変換前）</label>
+          <label for="output-area">出力欄（変換後）</label>
+          <textarea id="input-area" autofocus></textarea>
+          <textarea id="output-area"></textarea>
+        </div>
+        <div class="note">
+          入力すると自動的に変換されます。<br />巨大なデータを入力するとしばらく応答がなくなる場合があります。
+        </div>
+      </form>
       <footer>
-        <p>
-          このウェブページは<a href="https://github.com/treeify/treeify-browser-extension"
-            >Treeify</a
-          >の公式サブプロジェクトです。
-        </p>
-        <p>ソースコードはGitHubで公開されています。</p>
+        <p>このツールはTreeifyの公式ツールです。<br />ソースコードはGitHubで公開されています。</p>
         <a href="https://github.com/treeify/treeify-opml-converter"
           >https://github.com/treeify/treeify-opml-converter</a
         >
