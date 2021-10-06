@@ -54,7 +54,7 @@ main {
 }
 
 #input-output-area label {
-  font-size: 1.3em;
+  font-size: 1.2em;
   /* lch(50.0%, 0.0, 0.0)相当 */
   color: #777777;
 }
@@ -67,7 +67,7 @@ main {
   outline-color: #acb8dd;
   /* lch(75.0%, 0.0, 0.0)相当 */
   border: #b9b9b9 1px solid;
-  
+
   /* lch(85.0%, 0.0, 0.0)相当 */
   box-shadow: 0 0 4px #d4d4d4 inset;
 
@@ -79,6 +79,15 @@ main {
 #output-area {
   /* lch(98.0%, 0.0, 0.0) */
   background: #fafafa;
+}
+
+.note {
+  margin: 20px auto;
+  width: max-content;
+
+  font-size: 0.9em;
+  /* lch(40.0%, 0.0, 0.0)相当 */
+  color: #5e5e5e;
 }
 
 footer {
