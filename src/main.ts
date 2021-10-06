@@ -2,7 +2,7 @@ import './style.css'
 import {assertNonNull} from './assert'
 import marked from 'marked'
 
-document.title = 'WorkFlowyやDynalistのOPMLをTreeify用に変換'
+document.title = 'DynalistやWorkFlowyのOPMLをTreeify用に変換'
 
 const form = document.querySelector<HTMLFormElement>('#form')
 assertNonNull(form)
@@ -51,11 +51,11 @@ inputArea.addEventListener('input', () => {
   } else {
     for (const outlineElement of [...document.getElementsByTagName('outline')]) {
       switch (form.outlinerName.value) {
-        case 'WorkFlowy':
-          convertWorkFlowyOutlineElement(document, outlineElement)
-          break
         case 'Dynalist':
           convertDynalistOutlineElement(document, outlineElement)
+          break
+        case 'WorkFlowy':
+          convertWorkFlowyOutlineElement(document, outlineElement)
           break
       }
     }
@@ -68,13 +68,14 @@ inputArea.addEventListener('input', () => {
   }
 })
 
-// WorkFlowyのoutline要素をTreeify向けのoutline要素に変換する。
+// Dynalistのoutline要素をTreeify向けのoutline要素に変換する。
 // ミューテーションするので戻り値はなし。
-function convertWorkFlowyOutlineElement(document: Document, outlineElement: Element) {
+function convertDynalistOutlineElement(document: Document, outlineElement: Element) {
   const textAttribute = outlineElement.getAttribute('text')
   assertNonNull(textAttribute)
 
-  const documentFragment = parseHtml(textAttribute)
+  const html = marked.parseInline(textAttribute)
+  const documentFragment = parseHtml(html)
 
   // a要素をプレーンテキスト化する。
   // 例えば<a href="https://sample.com">リンク</a>は"リンク https://sample.com "に置換する。
@@ -119,14 +120,13 @@ function convertWorkFlowyOutlineElement(document: Document, outlineElement: Elem
   }
 }
 
-// Dynalistのoutline要素をTreeify向けのoutline要素に変換する。
+// WorkFlowyのoutline要素をTreeify向けのoutline要素に変換する。
 // ミューテーションするので戻り値はなし。
-function convertDynalistOutlineElement(document: Document, outlineElement: Element) {
+function convertWorkFlowyOutlineElement(document: Document, outlineElement: Element) {
   const textAttribute = outlineElement.getAttribute('text')
   assertNonNull(textAttribute)
 
-  const html = marked.parseInline(textAttribute)
-  const documentFragment = parseHtml(html)
+  const documentFragment = parseHtml(textAttribute)
 
   // a要素をプレーンテキスト化する。
   // 例えば<a href="https://sample.com">リンク</a>は"リンク https://sample.com "に置換する。
