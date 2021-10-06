@@ -9,14 +9,16 @@
     <main>
       <h1>OPMLをTreeify用に変換</h1>
       <form id="form">
-        <label>
-          <input type="radio" name="outlinerName" value="Dynalist" checked />
-          Dynalist
-        </label>
-        <label>
-          <input type="radio" name="outlinerName" value="WorkFlowy" />
-          WorkFlowy
-        </label>
+        <div class="radio-button-area">
+          <label>
+            <input type="radio" name="outlinerName" value="Dynalist" checked />
+            Dynalist → Treeify
+          </label>
+          <label>
+            <input type="radio" name="outlinerName" value="WorkFlowy" />
+            WorkFlowy → Treeify
+          </label>
+        </div>
         <div id="input-output-area">
           <label for="input-area">入力欄（変換前）</label>
           <label for="output-area">出力欄（変換後）</label>
