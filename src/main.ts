@@ -61,10 +61,6 @@ inputArea.addEventListener('input', () => {
     }
 
     outputArea.value = xmlDocumentToString(xmlDocument)
-
-    // 変換に成功したので出力欄にフォーカスを移す
-    outputArea.focus({preventScroll: true})
-    outputArea.setSelectionRange(0, 0)
   }
 })
 
