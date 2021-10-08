@@ -108,6 +108,12 @@ function convertDynalistOutlineElement(document: Document, outlineElement: Eleme
 
   outlineElement.setAttribute('html', toHtml(documentFragment))
 
+  // 完了状態を変換する
+  const completeAttribute = outlineElement.getAttribute('complete')
+  if (completeAttribute === 'true') {
+    outlineElement.setAttribute('cssClass', 'completed')
+  }
+
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
   if (noteAttribute !== null) {
@@ -158,6 +164,12 @@ function convertWorkFlowyOutlineElement(document: Document, outlineElement: Elem
   }
 
   outlineElement.setAttribute('html', toHtml(documentFragment))
+
+  // 完了状態を変換する
+  const completeAttribute = outlineElement.getAttribute('_complete')
+  if (completeAttribute === 'true') {
+    outlineElement.setAttribute('cssClass', 'completed')
+  }
 
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
