@@ -4,13 +4,6 @@ import marked from 'marked'
 
 document.title = 'DynalistやWorkFlowyのOPMLをTreeify用に変換'
 
-const form = document.querySelector<HTMLFormElement>('#form')
-assertNonNull(form)
-const inputArea = document.querySelector<HTMLTextAreaElement>('#input-area')
-assertNonNull(inputArea)
-const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
-assertNonNull(outputArea)
-
 // Dynalistに合わせてMarkdownパーサーの挙動をカスタマイズする。
 // __text__ を<strong>text</strong>の代わりに<em>text</em>と解釈させる。
 const tokenizer = {
@@ -39,9 +32,16 @@ const renderer = {
 }
 marked.use({tokenizer, renderer} as any)
 
+const inputArea = document.querySelector<HTMLTextAreaElement>('#input-area')
+assertNonNull(inputArea)
 inputArea.addEventListener('input', () => {
-  const document = new DOMParser().parseFromString(inputArea.value, 'text/xml')
-  if (document.getElementsByTagName('parsererror').length > 0) {
+  const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
+  assertNonNull(outputArea)
+  const form = document.querySelector<HTMLFormElement>('#form')
+  assertNonNull(form)
+  const xmlDocument = new DOMParser().parseFromString(inputArea.value, 'text/xml')
+
+  if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
     // パースエラー時
     if (inputArea.value !== '') {
       outputArea.value = 'エラー：OPMLとして認識できません。'
@@ -49,22 +49,18 @@ inputArea.addEventListener('input', () => {
       outputArea.value = ''
     }
   } else {
-    for (const outlineElement of [...document.getElementsByTagName('outline')]) {
+    for (const outlineElement of [...xmlDocument.getElementsByTagName('outline')]) {
       switch (form.outlinerName.value) {
         case 'Dynalist':
-          convertDynalistOutlineElement(document, outlineElement)
+          convertDynalistOutlineElement(xmlDocument, outlineElement)
           break
         case 'WorkFlowy':
-          convertWorkFlowyOutlineElement(document, outlineElement)
+          convertWorkFlowyOutlineElement(xmlDocument, outlineElement)
           break
       }
     }
 
-    outputArea.value = xmlDocumentToString(document)
-
-    // 変換に成功したので出力欄にフォーカスを移す
-    outputArea.focus({preventScroll: true})
-    outputArea.setSelectionRange(0, 0)
+    outputArea.value = xmlDocumentToString(xmlDocument)
   }
 })
 
@@ -107,6 +103,12 @@ function convertDynalistOutlineElement(document: Document, outlineElement: Eleme
   }
 
   outlineElement.setAttribute('html', toHtml(documentFragment))
+
+  // 完了状態を変換する
+  const completeAttribute = outlineElement.getAttribute('complete')
+  if (completeAttribute === 'true') {
+    outlineElement.setAttribute('cssClass', 'completed')
+  }
 
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
@@ -158,6 +160,12 @@ function convertWorkFlowyOutlineElement(document: Document, outlineElement: Elem
   }
 
   outlineElement.setAttribute('html', toHtml(documentFragment))
+
+  // 完了状態を変換する
+  const completeAttribute = outlineElement.getAttribute('_complete')
+  if (completeAttribute === 'true') {
+    outlineElement.setAttribute('cssClass', 'completed')
+  }
 
   // ノート（_note属性）が付いている場合は対応する子項目を作成する
   const noteAttribute = outlineElement.getAttribute('_note')
