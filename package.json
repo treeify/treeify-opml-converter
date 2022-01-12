@@ -1,6 +1,6 @@
 {
   "name": "treeify-opml-converter",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "devDependencies": {
     "@types/marked": "^2.0.4",
     "prettier": "^2.3.2",
