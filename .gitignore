@@ -1,7 +1,5 @@
+/node_modules/
+/dist/
+/.vscode/
+/.idea/
 .DS_Store
-
-/node_modules
-.idea
-.vscode
-
-/dist
