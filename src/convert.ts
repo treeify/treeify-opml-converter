@@ -34,7 +34,8 @@ class DynalistRenderer extends Renderer<false> {
   }
 }
 
-marked.use({ renderer: new DynalistRenderer(), tokenizer: new DynalistTokenizer() })
+// @ts-ignore 型定義ファイルの方が間違っているような気がする
+marked.setOptions({ renderer: new DynalistRenderer(), tokenizer: new DynalistTokenizer() })
 
 /**
  * Dynalistのoutline要素をTreeify向けのoutline要素に変換する。
