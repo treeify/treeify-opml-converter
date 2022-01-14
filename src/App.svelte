@@ -7,19 +7,23 @@
 
   document.title = 'DynalistやWorkFlowyのOPMLをTreeify用に変換'
 
-  let selectedOutliner = 'Dynalist'
+  type Outliner = 'Dynalist' | 'WorkFlowy'
+
+  let selectedOutliner: Outliner = 'Dynalist'
   let inputAreaText = ''
   let outputAreaText = ''
 
-  function onInput() {
-    const xmlDocument = new DOMParser().parseFromString(inputAreaText, 'text/xml')
+  $: outputAreaText = convert(inputAreaText, selectedOutliner)
+
+  function convert(inputText: string, selectedOutliner: Outliner): string {
+    const xmlDocument = new DOMParser().parseFromString(inputText, 'text/xml')
 
     if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
       // パースエラー時
-      if (inputAreaText !== '') {
-        outputAreaText = 'エラー：OPMLとして認識できません。'
+      if (inputText !== '') {
+        return 'エラー：OPMLとして認識できません。'
       } else {
-        outputAreaText = ''
+        return ''
       }
     } else {
       for (const outlineElement of [...xmlDocument.getElementsByTagName('outline')]) {
@@ -33,7 +37,7 @@
         }
       }
 
-      outputAreaText = xmlDocumentToString(xmlDocument)
+      return xmlDocumentToString(xmlDocument)
     }
   }
 </script>
@@ -54,8 +58,8 @@
     <div id="input-output-area">
       <label for="input-area">入力欄（変換前）</label>
       <label for="output-area">出力欄（変換後）</label>
-      <textarea id="input-area" autofocus bind:value={inputAreaText} on:input={onInput} />
-      <textarea id="output-area" bind:value={inputAreaText} />
+      <textarea id="input-area" autofocus bind:value={inputAreaText} />
+      <textarea id="output-area" bind:value={outputAreaText} />
     </div>
     <div class="note">
       入力すると自動的に変換されます。<br
