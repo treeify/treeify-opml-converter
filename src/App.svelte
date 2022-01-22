@@ -16,28 +16,41 @@
   $: outputAreaText = convert(inputAreaText, selectedOutliner)
 
   function convert(inputText: string, selectedOutliner: Outliner): string {
-    const xmlDocument = new DOMParser().parseFromString(inputText, 'text/xml')
+    if (inputText === '') return ''
 
-    if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
-      // パースエラー時
-      if (inputText !== '') {
-        return 'エラー：OPMLとして認識できません。'
-      } else {
-        return ''
-      }
-    } else {
-      for (const outlineElement of [...xmlDocument.getElementsByTagName('outline')]) {
-        switch (selectedOutliner) {
-          case 'Dynalist':
+    switch (selectedOutliner) {
+      case 'Dynalist': {
+        const xmlDocument = new DOMParser().parseFromString(inputText, 'text/xml')
+        if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
+          // パースエラー時
+          return 'エラー：OPMLとして認識できません。'
+        } else {
+          for (const outlineElement of [...xmlDocument.getElementsByTagName('outline')]) {
             convertDynalistOutlineElement(xmlDocument, outlineElement)
-            break
-          case 'WorkFlowy':
-            convertWorkFlowyOutlineElement(xmlDocument, outlineElement)
-            break
+          }
+          return xmlDocumentToString(xmlDocument)
         }
       }
-
-      return xmlDocumentToString(xmlDocument)
+      case 'WorkFlowy': {
+        // TODO: 高速化の余地あり
+        let escapedText = inputText
+          .replaceAll('<b>', '&lt;b&gt;')
+          .replaceAll('</b>', '&lt;/b&gt;')
+          .replaceAll('<u>', '&lt;u&gt;')
+          .replaceAll('</u>', '&lt;/u&gt;')
+          .replaceAll('<i>', '&lt;i&gt;')
+          .replaceAll('</i>', '&lt;/i&gt;')
+        const xmlDocument = new DOMParser().parseFromString(escapedText, 'text/xml')
+        if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
+          // パースエラー時
+          return 'エラー：OPMLとして認識できません。'
+        } else {
+          for (const outlineElement of xmlDocument.getElementsByTagName('outline')) {
+            convertWorkFlowyOutlineElement(xmlDocument, outlineElement)
+          }
+          return xmlDocumentToString(xmlDocument)
+        }
+      }
     }
   }
 </script>
