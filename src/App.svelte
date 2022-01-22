@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { assertNonNull } from './assert'
   import {
     convertDynalistOutlineElement,
     convertWorkFlowyOutlineElement,
@@ -8,25 +7,27 @@
 
   document.title = 'DynalistやWorkFlowyのOPMLをTreeify用に変換'
 
-  function onInput(event: InputEvent) {
-    if (!(event.target instanceof HTMLTextAreaElement)) return
+  type Outliner = 'Dynalist' | 'WorkFlowy'
 
-    const outputArea = document.querySelector<HTMLTextAreaElement>('#output-area')
-    assertNonNull(outputArea)
-    const form = document.querySelector<HTMLFormElement>('#form')
-    assertNonNull(form)
-    const xmlDocument = new DOMParser().parseFromString(event.target.value, 'text/xml')
+  let selectedOutliner: Outliner = 'Dynalist'
+  let inputAreaText = ''
+  let outputAreaText = ''
+
+  $: outputAreaText = convert(inputAreaText, selectedOutliner)
+
+  function convert(inputText: string, selectedOutliner: Outliner): string {
+    const xmlDocument = new DOMParser().parseFromString(inputText, 'text/xml')
 
     if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
       // パースエラー時
-      if (event.target.value !== '') {
-        outputArea.value = 'エラー：OPMLとして認識できません。'
+      if (inputText !== '') {
+        return 'エラー：OPMLとして認識できません。'
       } else {
-        outputArea.value = ''
+        return ''
       }
     } else {
       for (const outlineElement of [...xmlDocument.getElementsByTagName('outline')]) {
-        switch (form.outlinerName.value) {
+        switch (selectedOutliner) {
           case 'Dynalist':
             convertDynalistOutlineElement(xmlDocument, outlineElement)
             break
@@ -36,7 +37,7 @@
         }
       }
 
-      outputArea.value = xmlDocumentToString(xmlDocument)
+      return xmlDocumentToString(xmlDocument)
     }
   }
 </script>
@@ -46,19 +47,19 @@
   <form id="form">
     <div class="radio-button-area">
       <label>
-        <input type="radio" name="outlinerName" value="Dynalist" checked />
+        <input type="radio" bind:group={selectedOutliner} value="Dynalist" />
         Dynalist → Treeify
       </label>
       <label>
-        <input type="radio" name="outlinerName" value="WorkFlowy" />
+        <input type="radio" bind:group={selectedOutliner} value="WorkFlowy" />
         WorkFlowy → Treeify
       </label>
     </div>
     <div id="input-output-area">
       <label for="input-area">入力欄（変換前）</label>
       <label for="output-area">出力欄（変換後）</label>
-      <textarea id="input-area" autofocus on:input={onInput} />
-      <textarea id="output-area" />
+      <textarea id="input-area" autofocus bind:value={inputAreaText} />
+      <textarea id="output-area" bind:value={outputAreaText} />
     </div>
     <div class="note">
       入力すると自動的に変換されます。<br
