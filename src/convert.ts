@@ -1,41 +1,38 @@
-import { marked, Renderer, Tokenizer } from 'marked'
+import { toHtml } from 'hast-util-to-html'
+import { fromMarkdown } from 'mdast-util-from-markdown'
+import type { Content } from 'mdast-util-from-markdown/lib'
+import { gfmStrikethroughFromMarkdown } from 'mdast-util-gfm-strikethrough'
+import { toHast } from 'mdast-util-to-hast'
+import { gfmStrikethrough } from 'micromark-extension-gfm-strikethrough'
 import { assertNonNull } from './assert'
 
-// Dynalistに合わせてMarkdownパーサーの挙動をカスタマイズする。
-// __text__ を<strong>text</strong>の代わりに<em>text</em>と解釈させる。
-class DynalistTokenizer extends Tokenizer<false> {
-  emStrong(
-    src: string,
-    maskedSrc: string,
-    prevChar: string
-  ): marked.Tokens.Em | marked.Tokens.Strong | false {
-    const result = /^__(.+)__/.exec(src)
-    if (result === null) return false
+function parseDynalistMarkdown(markdown: string): string {
+  const tree = fromMarkdown(markdown, {
+    extensions: [gfmStrikethrough()],
+    mdastExtensions: [gfmStrikethroughFromMarkdown],
+  })
+  tree.children.map(convertDoubleUnderscoreToEm)
 
-    return {
-      type: 'em',
-      raw: result[0],
-      text: result[1],
-      tokens: [],
+  return toHtml(toHast(tree)!)
+
+  // Dynalistは__text__を斜体として扱っている。
+  // 一方標準のMarkdownは__text__を<strong>text</strong>として解釈する。
+  // なのでAST上でstrongをemに変換する。
+  // （Treeify的には<i>text</i>にしたいが、このライブラリでは直接そこまではできなさそう）
+  function convertDoubleUnderscoreToEm(content: Content) {
+    if (content.type === 'paragraph') {
+      content.children.map(convertDoubleUnderscoreToEm)
+    } else if (content.type === 'strong') {
+      const offset = content.position?.start?.offset
+      if (offset !== undefined) {
+        if (markdown.slice(offset, offset + 2) === '__') {
+          // @ts-ignore
+          content.type = 'emphasis'
+        }
+      }
     }
   }
 }
-
-// Treeify（というよりChromeのcontenteditable）に合わせてMarkdown→HTML変換の挙動をカスタマイズする。
-class DynalistRenderer extends Renderer<false> {
-  strong(text: string): string {
-    return `<b>${text}</b>`
-  }
-  em(text: string): string {
-    return `<i>${text}</i>`
-  }
-  del(text: string): string {
-    return `<strike>${text}</strike>`
-  }
-}
-
-// @ts-ignore 型定義ファイルの方が間違っているような気がする
-marked.setOptions({ renderer: new DynalistRenderer(), tokenizer: new DynalistTokenizer() })
 
 /**
  * Dynalistのoutline要素をTreeify向けのoutline要素に変換する。
@@ -45,7 +42,7 @@ export function convertDynalistOutlineElement(document: Document, outlineElement
   const textAttribute = outlineElement.getAttribute('text')
   assertNonNull(textAttribute)
 
-  const html = marked.parseInline(textAttribute)
+  const html = parseDynalistMarkdown(textAttribute)
   const documentFragment = parseHtml(html)
 
   // a要素をプレーンテキスト化する。
@@ -69,15 +66,19 @@ export function convertDynalistOutlineElement(document: Document, outlineElement
     }
   }
 
+  modifyElementName(documentFragment, 'strong', 'b')
+  modifyElementName(documentFragment, 'em', 'i')
+  modifyElementName(documentFragment, 'del', 's')
+
   // サポート外のタグを全て削除
   const otherElements = documentFragment.querySelectorAll('*')
   for (const element of otherElements) {
-    if (!new Set(['b', 'u', 'i', 'strike']).has(element.tagName.toLowerCase())) {
+    if (!new Set(['b', 'u', 'i', 's']).has(element.tagName.toLowerCase())) {
       element.replaceWith(...element.childNodes)
     }
   }
 
-  outlineElement.setAttribute('html', toHtml(documentFragment))
+  outlineElement.setAttribute('html', toHtmlString(documentFragment))
 
   // 完了状態を変換する
   const completeAttribute = outlineElement.getAttribute('complete')
@@ -94,6 +95,19 @@ export function convertDynalistOutlineElement(document: Document, outlineElement
 
     // Treeifyにとっては不要な属性なので削除（削除しなくても動作は変わらない）
     outlineElement.removeAttribute('_note')
+  }
+}
+
+function modifyElementName(
+  documentFragment: DocumentFragment,
+  before: keyof HTMLElementTagNameMap,
+  after: keyof HTMLElementTagNameMap
+) {
+  const beforeElements = documentFragment.querySelectorAll(before)
+  for (const beforeElement of beforeElements) {
+    const afterElement = document.createElement(after)
+    afterElement.replaceChildren(...beforeElement.childNodes)
+    beforeElement.replaceWith(afterElement)
   }
 }
 
@@ -131,12 +145,12 @@ export function convertWorkFlowyOutlineElement(document: Document, outlineElemen
   // サポート外のタグを全て削除
   const otherElements = documentFragment.querySelectorAll('*')
   for (const element of otherElements) {
-    if (!new Set(['b', 'u', 'i', 'strike']).has(element.tagName.toLowerCase())) {
+    if (!new Set(['b', 'u', 'i', 's']).has(element.tagName.toLowerCase())) {
       element.replaceWith(...element.childNodes)
     }
   }
 
-  outlineElement.setAttribute('html', toHtml(documentFragment))
+  outlineElement.setAttribute('html', toHtmlString(documentFragment))
 
   // 完了状態を変換する
   const completeAttribute = outlineElement.getAttribute('_complete')
@@ -172,7 +186,7 @@ function parseHtml(html: string): DocumentFragment {
   return templateElement.content
 }
 
-function toHtml(documentFragment: DocumentFragment): string {
+function toHtmlString(documentFragment: DocumentFragment): string {
   const dummy = document.createElement('dummy')
   dummy.append(documentFragment)
   return dummy.innerHTML
