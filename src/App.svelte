@@ -32,6 +32,7 @@
         }
       }
       case 'WorkFlowy': {
+        // WindowsでWorkFlowyウェブ版のOPMLエクスポートを行うとなぜかXMLエスケープされない不具合への対策
         // TODO: 高速化の余地あり
         let escapedText = inputText
           .replaceAll('<b>', '&lt;b&gt;')
