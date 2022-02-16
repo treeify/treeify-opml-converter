@@ -1,6 +1,6 @@
 {
   "name": "treeify-opml-converter",
-  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
     "build": "vite build",
