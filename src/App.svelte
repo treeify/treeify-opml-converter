@@ -76,8 +76,9 @@
       <textarea id="output-area" bind:value={outputAreaText} />
     </div>
     <div class="note">
-      入力すると自動的に変換されます。<br
-      />巨大なデータを入力するとしばらく応答がなくなる場合があります。
+      入力すると自動的に変換されます。<br />
+      巨大なデータを入力するとしばらく応答がなくなる場合があります。<br />
+      Treeifyへ貼り付けた際にさらに数分間かかる場合があります。
     </div>
   </form>
   <footer>
