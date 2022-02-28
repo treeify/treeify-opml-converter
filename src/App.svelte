@@ -18,9 +18,17 @@
   function convert(inputText: string, selectedOutliner: Outliner): string {
     if (inputText === '') return ''
 
+    // 制御文字が混入しているとエラーになるのでその対策。
+    // 下記を除く全ての制御文字を削除する。
+    // ・x09(HT)
+    // ・x0A(LF)
+    // ・x0D(CR)
+    // ・x80-x9F
+    const safeText = inputText.replaceAll(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '')
+
     switch (selectedOutliner) {
       case 'Dynalist': {
-        const xmlDocument = new DOMParser().parseFromString(inputText, 'text/xml')
+        const xmlDocument = new DOMParser().parseFromString(safeText, 'text/xml')
         if (xmlDocument.getElementsByTagName('parsererror').length > 0) {
           // パースエラー時
           return 'エラー：OPMLとして認識できません。'
@@ -34,7 +42,7 @@
       case 'WorkFlowy': {
         // WindowsでWorkFlowyウェブ版のOPMLエクスポートを行うとなぜかXMLエスケープされない不具合への対策
         // TODO: 高速化の余地あり
-        let escapedText = inputText
+        const escapedText = safeText
           .replaceAll('<b>', '&lt;b&gt;')
           .replaceAll('</b>', '&lt;/b&gt;')
           .replaceAll('<u>', '&lt;u&gt;')
