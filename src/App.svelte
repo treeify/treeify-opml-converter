@@ -186,9 +186,9 @@
     margin: 20px auto;
     width: max-content;
 
-    font-size: 0.9em;
-    /* lch(40.0%, 0.0, 0.0)相当 */
-    color: #5e5e5e;
+    font-size: 0.95em;
+    /* lch(30.0%, 0.0, 0.0)相当 */
+    color: #474747;
   }
 
   footer {
