@@ -104,8 +104,7 @@
   }
 
   :global(body) {
-    /* lch(97.0%, 0.0, 0.0)相当 */
-    background: #f6f6f6;
+    background: oklch(97% 0 0);
   }
 
   h1 {
@@ -113,8 +112,7 @@
     width: max-content;
 
     padding-inline: 1.5em;
-    /* lch(75.0%, 30.0, 160.4)相当 */
-    border-bottom: #84c7a5 3px solid;
+    border-bottom: oklch(75% 0.1 135.4) 3px solid;
 
     margin-bottom: 1em;
   }
@@ -127,8 +125,7 @@
     padding: 40px;
     background: #ffffff;
 
-    /* lch(80.0%, 0.0, 0.0)相当 */
-    box-shadow: 0 1.5px 5px #c6c6c6;
+    box-shadow: 0 1.5px 5px oklch(80% 0 0);
   }
 
   .radio-button-area {
@@ -155,21 +152,17 @@
 
   #input-output-area label {
     font-size: 1.2em;
-    /* lch(50.0%, 0.0, 0.0)相当 */
-    color: #777777;
+    color: oklch(50% 0 0);
   }
 
   #input-area,
   #output-area {
     white-space: nowrap;
 
-    /* lch(75.0%, 20.0, 280.4)相当 */
-    outline-color: #acb8dd;
-    /* lch(75.0%, 0.0, 0.0)相当 */
-    border: #b9b9b9 1px solid;
+    outline-color: oklch(75% 0.05 255.4);
+    border: oklch(75% 0 0) 1px solid;
 
-    /* lch(85.0%, 0.0, 0.0)相当 */
-    box-shadow: 0 0 4px #d4d4d4 inset;
+    box-shadow: 0 0 4px oklch(85% 0 0) inset;
 
     resize: none;
 
@@ -178,8 +171,7 @@
   }
 
   #output-area {
-    /* lch(98.0%, 0.0, 0.0) */
-    background: #fafafa;
+    background: oklch(98% 0 0);
   }
 
   .note {
@@ -187,8 +179,7 @@
     width: max-content;
 
     font-size: 0.95em;
-    /* lch(30.0%, 0.0, 0.0)相当 */
-    color: #474747;
+    color: oklch(30% 0 0);
   }
 
   footer {
@@ -198,8 +189,7 @@
     margin-top: 100px;
 
     font-size: 0.7em;
-    /* lch(60.0%, 0.0, 0.0)相当 */
-    color: #919191;
+    color: oklch(60% 0 0);
   }
   footer a {
     color: inherit;
