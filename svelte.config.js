@@ -1,7 +1,10 @@
 import sveltePreprocess from 'svelte-preprocess'
+import postcssOKLabFunction from '@csstools/postcss-oklab-function'
 
 export default {
-  // Consult https://github.com/sveltejs/svelte-preprocess
-  // for more information about preprocessors
-  preprocess: sveltePreprocess(),
+  preprocess: sveltePreprocess({
+    postcss: {
+      plugins: [postcssOKLabFunction({ subFeatures: { displayP3: false } })],
+    },
+  }),
 }
