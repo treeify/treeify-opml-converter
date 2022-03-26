@@ -105,6 +105,7 @@
 
   :global(body) {
     background: oklch(97% 0 0);
+    accent-color: oklch(59% 0.17 255.4);
   }
 
   h1 {
